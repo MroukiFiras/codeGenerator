@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "Models.Main",
+      "projectName": "codeGenerator_86381cfe"
+    },
+    {
+      "type": "java",
       "name": "ApplicationFrame",
       "request": "launch",
       "mainClass": "Views.ApplicationFrame",

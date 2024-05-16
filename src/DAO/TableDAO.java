@@ -54,7 +54,7 @@ public class TableDAO {
         return columns;
     }
 
-    public PrimaryKey getPrimaryKeyForTable(String tableName) {
+    public PrimaryKey getPrimaryKeyForTable( String tableName) {
         PrimaryKey primaryKey = null;
         String query = "SELECT k.column_name " +
                        "FROM information_schema.table_constraints t " +
@@ -74,7 +74,7 @@ public class TableDAO {
         return primaryKey;
     }
 
-    public List<ForeignKey> getForeignKeysForTable(String tableName) {
+    public List<ForeignKey> getForeignKeysForTable(String databaseName, String tableName) {
         List<ForeignKey> foreignKeys = new ArrayList<>();
         String query = "SELECT k.column_name, k.referenced_table_name, k.referenced_column_name " +
                        "FROM information_schema.key_column_usage k " +

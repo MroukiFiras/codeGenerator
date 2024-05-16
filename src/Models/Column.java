@@ -1,5 +1,6 @@
 package Models;
 
+
 public class Column {
     private String columnName;
     private String columnType;

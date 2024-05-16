@@ -1,13 +1,13 @@
 package Controllers;
 
 import Views.ApplicationFrame;
-
-import javax.swing.*;
-import CodeGenerator.CodeGenerator;
+import CodeGenerator.HTMLCodeGenerator;
 import CodeGenerator.JavaCodeGenerator;
-// import CodeGenerator.PythonCodeGenerator;
+import CodeGenerator.PythonCodeGenerator;
 import Models.Column;
+import Models.ForeignKey;
 import DAO.TableDAO;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
@@ -40,13 +40,13 @@ public class ApplicationController implements ActionListener {
 
     private void initialize() {
         frame = new ApplicationFrame(connection);
-        frame.addGenerateButtonListener(this); // Pass the controller instance
+        frame.addGenerateButtonListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == frame.getGenerateButton()) {
-            System.out.println("Generate Code button clicked."); // Debugging statement
+            System.out.println("Generate Code button clicked.");
             generateCode();
         }
     }
@@ -55,20 +55,35 @@ public class ApplicationController implements ActionListener {
         String[] selectedTables = frame.getSelectedTables();
         String selectedCode = frame.getSelectedCode();
         String selectedInterface = frame.getSelectedInterface();
-
-        System.out.println("Selected code: " + selectedCode); // Debugging statement
-        System.out.println("Selected interface: " + selectedInterface); // Debugging statement
-
+    
+        System.out.println("Selected code: " + selectedCode);
+        System.out.println("Selected interface: " + selectedInterface);
+    
         if (selectedCode != null && selectedInterface != null) {
             try {
                 TableDAO tableDAO = new TableDAO();
+                List<Column> columns;
+                List<ForeignKey> foreignKeys;
+    
                 for (String tableName : selectedTables) {
-                    List<Column> columns = tableDAO.getColumnsForTable(databaseName, tableName);
-                    CodeGenerator codeGenerator = getCodeGenerator(selectedCode);
-                    if (codeGenerator != null) {
-                        codeGenerator.generateCode(tableName, columns);
+                    columns = tableDAO.getColumnsForTable(databaseName, tableName);
+                    foreignKeys = tableDAO.getForeignKeysForTable(databaseName, tableName);
+    
+                    if ("Java".equals(selectedCode)) {
+                        JavaCodeGenerator javaCodeGenerator = new JavaCodeGenerator();
+                        javaCodeGenerator.generateCode(tableName, columns, foreignKeys);
+                    } else if ("Python".equals(selectedCode)) {
+                        PythonCodeGenerator pythonCodeGenerator = new PythonCodeGenerator();
+                        pythonCodeGenerator.generateCode(tableName, columns, foreignKeys);
                     }
-                    // Handle interface generation (e.g., Swing, HTML) here if needed
+    
+                    if ("HTML".equals(selectedInterface)) {
+                        HTMLCodeGenerator htmlCodeGenerator = new HTMLCodeGenerator();
+                        htmlCodeGenerator.generateCode(tableName, columns, foreignKeys);
+                    } else if ("Swing".equals(selectedInterface)) {
+                        // Instantiate and execute Swing code generator if selected
+                    }
+                    // Handle other code generation options here
                 }
                 JOptionPane.showMessageDialog(null, "Code generation complete.", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception e) {
@@ -79,17 +94,8 @@ public class ApplicationController implements ActionListener {
             JOptionPane.showMessageDialog(null, "Please select code and interface options.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private CodeGenerator getCodeGenerator(String selectedCode) {
-        switch (selectedCode) {
-            case "Java":
-                return new JavaCodeGenerator();
-            case "Python":
-                // return new PythonCodeGenerator();
-            // Add more cases here for other code generators
-            default:
-                JOptionPane.showMessageDialog(null, "Unsupported code generation language: " + selectedCode, "Error", JOptionPane.ERROR_MESSAGE);
-                return null;
-        }
-    }
+    
+    
 }
+
+
