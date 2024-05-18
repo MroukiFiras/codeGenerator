@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "SwingForm",
+      "request": "launch",
+      "mainClass": "Models.SwingForm",
+      "projectName": "codeGenerator_86381cfe"
+    },
+    {
+      "type": "java",
       "name": "Main",
       "request": "launch",
       "mainClass": "Models.Main",

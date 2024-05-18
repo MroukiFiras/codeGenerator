@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-public class HTMLCodeGenerator implements CodeGenerator {
+public class HTMLCodeGenerator implements ICodeGenerator {
 
     @Override
     public void generateCode(String tableName, List<Column> columns, List<ForeignKey> foreignKeys) {
@@ -30,11 +30,7 @@ public class HTMLCodeGenerator implements CodeGenerator {
         writeToFile(tableName + "Form.html", form.toString(), "HTML");
     }
 
-    @Override
-    public String getDataType(String sqlType) {
-        // HTML form generator does not require data type mapping
-        return null;
-    }
+
 
     @Override
     public void writeToFile(String fileName, String code, String language) {

@@ -4,6 +4,7 @@ import Views.ApplicationFrame;
 import CodeGenerator.HTMLCodeGenerator;
 import CodeGenerator.JavaCodeGenerator;
 import CodeGenerator.PythonCodeGenerator;
+import CodeGenerator.SwingCodeGenerator;
 import Models.Column;
 import Models.ForeignKey;
 import DAO.TableDAO;
@@ -81,7 +82,8 @@ public class ApplicationController implements ActionListener {
                         HTMLCodeGenerator htmlCodeGenerator = new HTMLCodeGenerator();
                         htmlCodeGenerator.generateCode(tableName, columns, foreignKeys);
                     } else if ("Swing".equals(selectedInterface)) {
-                        // Instantiate and execute Swing code generator if selected
+                        SwingCodeGenerator swingCodeGnerator = new SwingCodeGenerator();
+                        swingCodeGnerator.generateCode(tableName, columns, foreignKeys);
                     }
                     // Handle other code generation options here
                 }

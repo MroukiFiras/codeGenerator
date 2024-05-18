@@ -5,13 +5,29 @@ import Models.ForeignKey;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class PythonCodeGenerator implements CodeGenerator {
+public class PythonCodeGenerator implements ICodeGenerator {
 
     @Override
     public void generateCode(String tableName, List<Column> columns, List<ForeignKey> foreignKeys) {
         StringBuilder code = new StringBuilder();
+        Set<String> imports = new HashSet<>();
+
+        // Collect necessary imports for foreign key references
+        for (ForeignKey foreignKey : foreignKeys) {
+            imports.add(foreignKey.getReferencedTableName());
+        }
+
+        // Add import statements
+        for (String importStatement : imports) {
+            code.append("from Models import ").append(importStatement).append("\n");
+        }
+        if (!imports.isEmpty()) {
+            code.append("\n");
+        }
 
         // Generate class definition
         code.append("class ").append(tableName).append(":\n\n");
@@ -27,11 +43,6 @@ public class PythonCodeGenerator implements CodeGenerator {
         }
         code.append("\n");
 
-        // Handle foreign keys
-        for (ForeignKey foreignKey : foreignKeys) {
-            code.append("        # Foreign Key: ").append(foreignKey.getColumnName()).append("\n");
-            code.append("        self.").append(foreignKey.getColumnName()).append(" = ").append(foreignKey.getReferencedTableName()).append("()\n");
-        }
 
         // Generate getter and setter methods
         for (Column column : columns) {
@@ -49,12 +60,6 @@ public class PythonCodeGenerator implements CodeGenerator {
     }
 
     @Override
-    public String getDataType(String sqlType) {
-        // Implement this method based on your requirements
-        return null;
-    }
-
-    @Override
     public void writeToFile(String fileName, String code, String language) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(code);
@@ -63,4 +68,5 @@ public class PythonCodeGenerator implements CodeGenerator {
             System.err.println("Error writing " + language + " class to file: " + e.getMessage());
         }
     }
+
 }

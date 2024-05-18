@@ -2,16 +2,36 @@ package CodeGenerator;
 
 import Models.Column;
 import Models.ForeignKey;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class JavaCodeGenerator implements CodeGenerator {
+public class JavaCodeGenerator implements ICodeGenerator {
 
     @Override
     public void generateCode(String className, List<Column> columns, List<ForeignKey> foreignKeys) {
         StringBuilder code = new StringBuilder();
+        Set<String> imports = new HashSet<>();
+
+        // Collect necessary imports for foreign key references
+        for (Column column : columns) {
+            if (isForeignKey(column, foreignKeys)) {
+                imports.add("Models." + getReferencedClass(column, foreignKeys));
+            }
+        }
+
+        // Add import statements
+        for (String importStatement : imports) {
+            code.append("import ").append(importStatement).append(";\n");
+        }
+        if (!imports.isEmpty()) {
+            code.append("\n");
+        }
+
         code.append("public class ").append(className).append(" {\n");
 
         // Generate attributes
@@ -38,11 +58,6 @@ public class JavaCodeGenerator implements CodeGenerator {
                     .append(";\n");
             }
         }
-
-        // Generate default constructor
-        code.append("\n    public ").append(className).append("() {\n");
-        code.append("        // Default constructor logic here\n");
-        code.append("    }\n");
 
         // Generate parameterized constructor
         code.append("\n    public ").append(className).append("(");
@@ -108,7 +123,6 @@ public class JavaCodeGenerator implements CodeGenerator {
         writeToFile(className + ".java", code.toString(), "Java");
     }
 
-    @Override
     public String getDataType(String sqlType) {
         switch (sqlType.toLowerCase()) {
             case "varchar":
