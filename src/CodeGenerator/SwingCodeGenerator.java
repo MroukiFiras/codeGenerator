@@ -56,6 +56,10 @@ public class SwingCodeGenerator implements ICodeGenerator {
         // Add submit button
         code.append("        JButton submitButton = new JButton(\"Submit\");\n");
         code.append("        add(submitButton);\n\n");
+        code.append("        submitButton.addActionListener(e -> {\n");
+        code.append("            // Handle form submission\n");
+        code.append("            // e.g., save data to database\n");
+        code.append("        });\n");
 
         code.append("    }\n\n");
 
@@ -101,8 +105,6 @@ public class SwingCodeGenerator implements ICodeGenerator {
         return false;
     }
 
-
-
     @Override
     public void writeToFile(String fileName, String code, String language) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
@@ -112,5 +114,6 @@ public class SwingCodeGenerator implements ICodeGenerator {
             System.err.println("Error writing " + language + " class to file: " + e.getMessage());
         }
     }
+
     
 }

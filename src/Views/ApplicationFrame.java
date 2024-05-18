@@ -5,9 +5,7 @@ import Models.Table;
 import utilitaires.Utilitaire;
 
 import javax.swing.*;
-
 import Controllers.ApplicationController;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -16,8 +14,8 @@ import java.util.List;
 
 public class ApplicationFrame extends JFrame {
     private JList<String> tableList;
-    private JCheckBox javaCheckBox;
-    private JCheckBox pythonCheckBox;
+    private JRadioButton javaRadioButton;
+    private JRadioButton pythonRadioButton;
     private JRadioButton swingRadioButton;
     private JRadioButton htmlRadioButton;
     private JButton generateButton;
@@ -50,11 +48,14 @@ public class ApplicationFrame extends JFrame {
         tablePanel.add(tableScrollPane);
 
         JLabel codeLabel = new JLabel("Select Code:");
-        javaCheckBox = new JCheckBox("Java");
-        pythonCheckBox = new JCheckBox("Python");
+        javaRadioButton = new JRadioButton("Java");
+        pythonRadioButton = new JRadioButton("Python");
+        ButtonGroup codeGroup = new ButtonGroup();
+        codeGroup.add(javaRadioButton);
+        codeGroup.add(pythonRadioButton);
         codePanel.add(codeLabel);
-        codePanel.add(javaCheckBox);
-        codePanel.add(pythonCheckBox);
+        codePanel.add(javaRadioButton);
+        codePanel.add(pythonRadioButton);
 
         JLabel interfaceLabel = new JLabel("Select Interface:");
         swingRadioButton = new JRadioButton("Swing");
@@ -87,9 +88,9 @@ public class ApplicationFrame extends JFrame {
     }
 
     public String getSelectedCode() {
-        if (javaCheckBox.isSelected()) {
+        if (javaRadioButton.isSelected()) {
             return "Java";
-        } else if (pythonCheckBox.isSelected()) {
+        } else if (pythonRadioButton.isSelected()) {
             return "Python";
         } else {
             return null;
@@ -110,7 +111,6 @@ public class ApplicationFrame extends JFrame {
         return generateButton;
     }
 
-
     public static void main(String[] args) {
         // Load connection properties
         String propertiesFilePath = "C:\\Users\\firas\\Desktop\\atelierProg\\Semestre2\\ProjectJava\\codeGenerator\\connection.properties"; 
@@ -127,6 +127,4 @@ public class ApplicationFrame extends JFrame {
         // Add the action listener to the generate button
         frame.addGenerateButtonListener(controller);
     }
-    
-    
 }
