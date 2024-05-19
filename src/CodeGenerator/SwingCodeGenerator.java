@@ -56,11 +56,6 @@ public class SwingCodeGenerator implements ICodeGenerator {
         // Add submit button
         code.append("        JButton submitButton = new JButton(\"Submit\");\n");
         code.append("        add(submitButton);\n\n");
-        code.append("        submitButton.addActionListener(e -> {\n");
-        code.append("            // Handle form submission\n");
-        code.append("            // e.g., save data to database\n");
-        code.append("        });\n");
-
         code.append("    }\n\n");
 
         // Generate methods to load JComboBox data

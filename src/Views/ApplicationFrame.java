@@ -21,9 +21,10 @@ public class ApplicationFrame extends JFrame {
     private JButton generateButton;
 
     public ApplicationFrame(Connection connection) {
-        setTitle("Code Generator");
+        setTitle("CodeGenius");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // Center the frame
 
         TableDAO tableDAO = new TableDAO();
         List<Table> tableNames = tableDAO.getAllTables();
@@ -32,21 +33,26 @@ public class ApplicationFrame extends JFrame {
             tableNamesList.add(table.getTableName());
         }
 
-        JPanel mainPanel = new JPanel(new GridLayout(5, 1));
-        JPanel tablePanel = new JPanel(new FlowLayout());
-        JPanel codePanel = new JPanel(new FlowLayout());
-        JPanel interfacePanel = new JPanel(new FlowLayout());
-        JPanel buttonPanel = new JPanel(new FlowLayout());
+        // Main panel
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
+        // Input panel
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Table selection panel
+        JPanel tablePanel = new JPanel(new BorderLayout());
         JLabel tableLabel = new JLabel("Select Table(s):");
         tableList = new JList<>(tableNamesList.toArray(new String[0]));
         tableList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        tableList.setVisibleRowCount(8);
         JScrollPane tableScrollPane = new JScrollPane(tableList);
-        tableScrollPane.setPreferredSize(new Dimension(100, 100));
-        tablePanel.add(tableLabel);
-        tablePanel.add(tableScrollPane);
+        tablePanel.add(tableLabel, BorderLayout.NORTH);
+        tablePanel.add(tableScrollPane, BorderLayout.CENTER);
+        inputPanel.add(tablePanel); 
 
+        // Code selection panel
+        JPanel codePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel codeLabel = new JLabel("Select Code:");
         javaRadioButton = new JRadioButton("Java");
         pythonRadioButton = new JRadioButton("Python");
@@ -56,7 +62,10 @@ public class ApplicationFrame extends JFrame {
         codePanel.add(codeLabel);
         codePanel.add(javaRadioButton);
         codePanel.add(pythonRadioButton);
+        inputPanel.add(codePanel);
 
+        // Interface selection panel
+        JPanel interfacePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel interfaceLabel = new JLabel("Select Interface:");
         swingRadioButton = new JRadioButton("Swing");
         htmlRadioButton = new JRadioButton("HTML");
@@ -66,18 +75,20 @@ public class ApplicationFrame extends JFrame {
         interfacePanel.add(interfaceLabel);
         interfacePanel.add(swingRadioButton);
         interfacePanel.add(htmlRadioButton);
+        inputPanel.add(interfacePanel);
 
+
+        // Generate button
         generateButton = new JButton("Generate Code");
-        buttonPanel.add(generateButton);
+        generateButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        inputPanel.add(generateButton);
 
-        mainPanel.add(tablePanel);
-        mainPanel.add(codePanel);
-        mainPanel.add(interfacePanel);
-        mainPanel.add(buttonPanel);
-
+        mainPanel.add(inputPanel, BorderLayout.NORTH);
         add(mainPanel);
         setVisible(true);
     }
+
+
 
     public void addGenerateButtonListener(ActionListener listener) {
         generateButton.addActionListener(listener);
@@ -110,6 +121,8 @@ public class ApplicationFrame extends JFrame {
     public JButton getGenerateButton() {
         return generateButton;
     }
+
+
 
     public static void main(String[] args) {
         // Load connection properties

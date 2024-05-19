@@ -57,8 +57,8 @@ public class ApplicationController implements ActionListener {
         String selectedCode = frame.getSelectedCode();
         String selectedInterface = frame.getSelectedInterface();
     
-        System.out.println("Selected code: " + selectedCode);
-        System.out.println("Selected interface: " + selectedInterface);
+        // System.out.println("Selected code: " + selectedCode);
+        // System.out.println("Selected interface: " + selectedInterface);
     
         if (selectedCode != null && selectedInterface != null) {
             try {
@@ -85,9 +85,11 @@ public class ApplicationController implements ActionListener {
                         SwingCodeGenerator swingCodeGnerator = new SwingCodeGenerator();
                         swingCodeGnerator.generateCode(tableName, columns, foreignKeys);
                     }
-                    // Handle other code generation options here
                 }
                 JOptionPane.showMessageDialog(null, "Code generation complete.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Error during code generation: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
